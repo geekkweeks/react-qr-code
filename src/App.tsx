@@ -15,7 +15,17 @@ function App(this: any) {
     useEffect(() => {
         async function enableStream() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia(CAPTURE_OPTIONS);
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        width: {
+                            min: 1280
+                        },
+                        height: {
+                            min: 720
+                        }
+                    }
+                });
                 setCameraOn({ isMobile: true, isActive: true })
             } catch (err) {
                 // alert('Camera not found')
@@ -26,10 +36,7 @@ function App(this: any) {
 
     function setQrActive() {
         alert('clicked')
-        // if (cameraOn.isMobile) {
-        //     setCameraOn({ isMobile: true, isActive: true });
-        // }
-        setIsOpenCamera(true);
+        setIsOpenCamera(!isOpenCamera);
     }
 
     const handleErrorWebCam = (error: any) => {
@@ -50,8 +57,8 @@ function App(this: any) {
         if (data) {
             setScanResultWebCam(data)
             alert(data)
+            window.open(data, '_self');
         }
-
     }
 
 
