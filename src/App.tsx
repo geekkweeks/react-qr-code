@@ -17,13 +17,7 @@ function App(this: any) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
-                        facingMode: 'environment',
-                        width: {
-                            min: 1280
-                        },
-                        height: {
-                            min: 720
-                        }
+                        facingMode: 'environment'
                     }
                 });
                 setCameraOn({ isMobile: true, isActive: true })
