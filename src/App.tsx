@@ -36,6 +36,10 @@ function App() {
 
     return (
         <div className="App">
+            <br />
+            <br />
+            <br />
+            <br />
             <button className="" onClick={setQrActive}>
                 Click me
             </button>
