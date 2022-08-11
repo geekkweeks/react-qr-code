@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { QrReader } from 'react-qr-reader';
 import './App.css';
 
-function App() {
+function App(this: any) {
     const [cameraOn, setCameraOn] = useState<{ isMobile: boolean, isActive: boolean }>({ isMobile: false, isActive: false });
     const [scanResultWebCam, setScanResultWebCam] = useState<any>()
     useEffect(() => {
@@ -18,10 +18,12 @@ function App() {
     }, []);
 
     function setQrActive() {
+
         alert('clicked')
         if (cameraOn.isMobile) {
             setCameraOn({ isMobile: true, isActive: true });
         }
+        setCameraOn({ isMobile: true, isActive: true });
     }
 
     const handleErrorWebCam = (error: any) => {
@@ -32,6 +34,17 @@ function App() {
         if (result) {
             setScanResultWebCam(result);
         }
+    }
+
+    const handleError = (err: any) => {
+        console.error(err)
+    }
+
+    const handleScan = (data: any) => {
+        if (data) {
+            setScanResultWebCam(data)
+        }
+        alert(data)
     }
 
     return (
@@ -47,17 +60,12 @@ function App() {
                 cameraOn.isActive && cameraOn.isMobile &&
                 <QrReader
                     scanDelay={300}
+                    // error={handleError}
+                    onResult={handleScan}
                     videoStyle={{ width: '100%' }}
-                    // error={handleErrorWebCam}
-                    onResult={(result, error) => {
-                        if (!!result) {
-                            handleScanWebCam(result as any);
-                        }
-
-                        if (!!error) {
-                            console.info(error);
-                        }
-                    }} constraints={{ facingMode: 'user' }} />
+                    constraints={{
+                        facingMode: { exact: "user" }
+                    }} />
             }
 
         </div>
