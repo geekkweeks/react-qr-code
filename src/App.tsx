@@ -18,6 +18,7 @@ function App() {
     }, []);
 
     function setQrActive() {
+        alert('clicked')
         if (cameraOn.isMobile) {
             setCameraOn({ isMobile: true, isActive: true });
         }
