@@ -5,25 +5,25 @@ import './App.css';
 function App(this: any) {
     const [cameraOn, setCameraOn] = useState<{ isMobile: boolean, isActive: boolean }>({ isMobile: false, isActive: false });
     const [scanResultWebCam, setScanResultWebCam] = useState<any>()
+    const [isOpenCamera, setIsOpenCamera] = useState<boolean>(false)
     useEffect(() => {
         async function enableStream() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 setCameraOn({ isMobile: true, isActive: true })
             } catch (err) {
-                alert('Camera not found')
+                // alert('Camera not found')
             }
         }
         enableStream()
     }, []);
 
     function setQrActive() {
-
         alert('clicked')
-        if (cameraOn.isMobile) {
-            setCameraOn({ isMobile: true, isActive: true });
-        }
-        setCameraOn({ isMobile: true, isActive: true });
+        // if (cameraOn.isMobile) {
+        //     setCameraOn({ isMobile: true, isActive: true });
+        // }
+        setIsOpenCamera(true);
     }
 
     const handleErrorWebCam = (error: any) => {
@@ -43,8 +43,9 @@ function App(this: any) {
     const handleScan = (data: any) => {
         if (data) {
             setScanResultWebCam(data)
+            alert(data)
         }
-        alert(data)
+
     }
 
     return (
@@ -57,7 +58,7 @@ function App(this: any) {
                 Click me
             </button>
             {
-                cameraOn.isActive && cameraOn.isMobile &&
+                isOpenCamera &&
                 <QrReader
                     scanDelay={300}
                     // error={handleError}
