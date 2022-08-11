@@ -6,10 +6,16 @@ function App(this: any) {
     const [cameraOn, setCameraOn] = useState<{ isMobile: boolean, isActive: boolean }>({ isMobile: false, isActive: false });
     const [scanResultWebCam, setScanResultWebCam] = useState<any>()
     const [isOpenCamera, setIsOpenCamera] = useState<boolean>(false)
+
+    const CAPTURE_OPTIONS = {
+        audio: false,
+        video: { facingMode: "environment" },
+    };
+
     useEffect(() => {
         async function enableStream() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const stream = await navigator.mediaDevices.getUserMedia(CAPTURE_OPTIONS);
                 setCameraOn({ isMobile: true, isActive: true })
             } catch (err) {
                 // alert('Camera not found')
@@ -47,6 +53,8 @@ function App(this: any) {
         }
 
     }
+
+
 
     return (
         <div className="App">
