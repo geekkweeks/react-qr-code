@@ -15,11 +15,7 @@ function App(this: any) {
     useEffect(() => {
         async function enableStream() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'environment'
-                    }
-                });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 setCameraOn({ isMobile: true, isActive: true })
             } catch (err) {
                 // alert('Camera not found')
