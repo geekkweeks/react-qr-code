@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { QrReader } from 'react-qr-reader';
+import { OnResultFunction, QrReader } from 'react-qr-reader';
 import './App.css';
 
-function App(this: any) {
+function App() {
     const [cameraOn, setCameraOn] = useState<{ isMobile: boolean, isActive: boolean }>({ isMobile: false, isActive: false });
-    const [scanResultWebCam, setScanResultWebCam] = useState<any>()
+    const [scanResultWebCam, setScanResultWebCam] = useState<string>('')
     const [isOpenCamera, setIsOpenCamera] = useState<boolean>(false)
+    const [mediaStream, setMediaStream] = useState<MediaStream>();
 
     const CAPTURE_OPTIONS = {
         audio: false,
@@ -15,14 +16,24 @@ function App(this: any) {
     useEffect(() => {
         async function enableStream() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                setCameraOn({ isMobile: true, isActive: true })
+                const stream = await navigator.mediaDevices.getUserMedia(CAPTURE_OPTIONS);
+                setMediaStream(stream)
             } catch (err) {
-                // alert('Camera not found')
+                alert('Camera not found')
             }
         }
-        enableStream()
-    }, []);
+
+        if (!mediaStream) {
+            enableStream();
+        } else {
+            return function cleanup() {
+                mediaStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+
+    }, [mediaStream]);
 
     function setQrActive() {
         alert('clicked')
@@ -43,14 +54,11 @@ function App(this: any) {
         console.error(err)
     }
 
-    const handleScan = (data: any) => {
-        if (data) {
-            setScanResultWebCam(data)
-            alert(data)
-            window.open(data, '_self');
-        }
-    }
 
+    const isValidURL = (input: string) => {
+        var res = input.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+        return (res !== null)
+    };
 
 
     return (
@@ -67,10 +75,23 @@ function App(this: any) {
                 <QrReader
                     scanDelay={300}
                     // error={handleError}
-                    onResult={handleScan}
+                    onResult={(result, error) => {
+                        if (!!result) {
+                            const link = result?.getText
+                            alert(link)
+                            if (isValidURL(link as any)) {
+                                // window.open(result?.getText, '_self');
+                                alert('the link is ' + link)
+                            }
+                        }
+
+                        if (!!error) {
+                            console.info(error);
+                        }
+                    }}
                     videoStyle={{ width: '100%' }}
                     constraints={{
-                        facingMode: { exact: "user" }
+                        facingMode: "environment"
                     }} />
             }
 
