@@ -77,9 +77,9 @@ function App() {
                     // error={handleError}
                     onResult={(result, error) => {
                         if (!!result) {
-                            const link = result?.getText
+                            const link = result?.getText()
                             alert(link)
-                            if (isValidURL(link as any)) {
+                            if (isValidURL(link)) {
                                 // window.open(result?.getText, '_self');
                                 alert('the link is ' + link)
                             }
